@@ -1,0 +1,545 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "PhishGuard AI API",
+    "description": "Production-grade AI/ML service for phishing and malicious URL detection.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/health": {
+      "get": {
+        "summary": "Health",
+        "operationId": "health_v1_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Health V1 Health Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/ready": {
+      "get": {
+        "summary": "Ready",
+        "operationId": "ready_v1_ready_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Ready V1 Ready Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/model/info": {
+      "get": {
+        "summary": "Model Info",
+        "operationId": "model_info_v1_model_info_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Model Info V1 Model Info Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/scan": {
+      "post": {
+        "summary": "Scan Single Url",
+        "operationId": "scan_single_url_v1_scan_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ScanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Scan Single Url V1 Scan Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/scan/batch": {
+      "post": {
+        "summary": "Scan Batch Urls",
+        "operationId": "scan_batch_urls_v1_scan_batch_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchScanRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Scan Batch Urls V1 Scan Batch Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/lists": {
+      "post": {
+        "summary": "Add List Entry",
+        "operationId": "add_list_entry_v1_lists_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UserListEntryRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Add List Entry V1 Lists Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "get": {
+        "summary": "Get User Lists",
+        "operationId": "get_user_lists_v1_lists_get",
+        "parameters": [
+          {
+            "name": "user_key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Key"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get User Lists V1 Lists Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete List Entry",
+        "operationId": "delete_list_entry_v1_lists_delete",
+        "parameters": [
+          {
+            "name": "user_key",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "User Key"
+            }
+          },
+          {
+            "name": "list_type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "List Type"
+            }
+          },
+          {
+            "name": "entry",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Entry"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Delete List Entry V1 Lists Delete"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/feedback": {
+      "post": {
+        "summary": "Submit Feedback",
+        "operationId": "submit_feedback_v1_feedback_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FeedbackRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Submit Feedback V1 Feedback Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "BatchScanRequest": {
+        "properties": {
+          "urls": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "maxItems": 100,
+            "title": "Urls",
+            "description": "List of URLs to scan (capped at 100)"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "default": "fast"
+          },
+          "client": {
+            "type": "string",
+            "title": "Client",
+            "default": "api"
+          },
+          "user_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Key"
+          }
+        },
+        "type": "object",
+        "required": [
+          "urls"
+        ],
+        "title": "BatchScanRequest"
+      },
+      "FeedbackRequest": {
+        "properties": {
+          "scan_id": {
+            "type": "string",
+            "title": "Scan Id"
+          },
+          "url_canonical_hash": {
+            "type": "string",
+            "title": "Url Canonical Hash"
+          },
+          "feedback_label": {
+            "type": "string",
+            "title": "Feedback Label",
+            "description": "'false_positive', 'false_negative', or 'correct'"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scan_id",
+          "url_canonical_hash",
+          "feedback_label"
+        ],
+        "title": "FeedbackRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ScanRequest": {
+        "properties": {
+          "url": {
+            "type": "string",
+            "maxLength": 2048,
+            "title": "Url",
+            "description": "URL to scan (up to 2048 chars per R-SEC-2)"
+          },
+          "mode": {
+            "type": "string",
+            "title": "Mode",
+            "description": "Detection mode: fast or deep",
+            "default": "fast"
+          },
+          "client": {
+            "type": "string",
+            "title": "Client",
+            "description": "Client identifier (e.g. extension/0.1.0)",
+            "default": "api"
+          },
+          "store": {
+            "type": "boolean",
+            "title": "Store",
+            "description": "Whether user explicitly consented to store URL (R-PRIV-1)",
+            "default": false
+          },
+          "user_key": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Key",
+            "description": "Optional user key for custom allow/deny lists"
+          }
+        },
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "title": "ScanRequest"
+      },
+      "UserListEntryRequest": {
+        "properties": {
+          "user_key": {
+            "type": "string",
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "User Key",
+            "description": "User or client identifier"
+          },
+          "list_type": {
+            "type": "string",
+            "title": "List Type",
+            "description": "'allow' or 'deny'"
+          },
+          "entry": {
+            "type": "string",
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Entry",
+            "description": "Domain or URL to allow or block"
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Comment"
+          }
+        },
+        "type": "object",
+        "required": [
+          "user_key",
+          "list_type",
+          "entry"
+        ],
+        "title": "UserListEntryRequest"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      }
+    }
+  }
+}

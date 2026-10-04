@@ -1,0 +1,78 @@
+reasons:
+  brand_in_subdomain_not_regdomain:
+    code: brand_in_subdomain_not_regdomain
+    severity: high
+    text: "The name of a well-known brand appears in the address, but the site isn't run by that brand."
+    target_segment: subdomain
+
+  brand_in_path_not_regdomain:
+    code: brand_in_path_not_regdomain
+    severity: high
+    text: "The address uses a brand name in its path on an unrelated website."
+    target_segment: path
+
+  typosquat_brand:
+    code: typosquat_brand
+    severity: high
+    text: "The domain looks like a misspelling of a popular site."
+    target_segment: registered_domain
+
+  combosquat_brand:
+    code: combosquat_brand
+    severity: high
+    text: "The address combines a popular brand name with suspicious keywords like login or verify."
+    target_segment: registered_domain
+
+  ip_host:
+    code: ip_host
+    severity: high
+    text: "The address uses numbers instead of a name, which real services rarely do."
+    target_segment: host
+
+  userinfo_trick:
+    code: userinfo_trick
+    severity: high
+    text: "Part of the address before an '@' is hiding the real destination."
+    target_segment: host
+
+  punycode_mixed_script:
+    code: punycode_mixed_script
+    severity: medium
+    text: "The address mixes letters from different alphabets that look alike."
+    target_segment: host
+
+  long_random_subdomain:
+    code: long_random_subdomain
+    severity: medium
+    text: "The address has a long string of random-looking characters."
+    target_segment: subdomain
+
+  high_entropy:
+    code: high_entropy
+    severity: medium
+    text: "The web address contains an unusually high amount of random or obfuscated text."
+    target_segment: registered_domain
+
+  excessive_subdomains:
+    code: excessive_subdomains
+    severity: medium
+    text: "The address contains multiple levels of subdomains attempting to deceive readers."
+    target_segment: subdomain
+
+  suspicious_keywords:
+    code: suspicious_keywords
+    severity: medium
+    text: "The address asks you to sign in, verify, or update account credentials."
+    target_segment: path
+
+  feed_hit:
+    code: feed_hit
+    severity: high
+    text: "This address was reported as a scam by a threat-intelligence source."
+    target_segment: registered_domain
+
+  user_denylist:
+    code: user_denylist
+    severity: high
+    text: "This address matches a domain in your personal blocklist."
+    target_segment: registered_domain

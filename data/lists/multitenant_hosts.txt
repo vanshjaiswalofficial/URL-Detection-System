@@ -1,0 +1,26 @@
+# Curated list of multi-tenant hosting platforms (ARCHITECTURE.md §4.2, D-011)
+# These hosts are NEVER auto-allowed by the allowlist layer.
+github.io
+web.app
+firebaseapp.com
+pages.dev
+vercel.app
+netlify.app
+blogspot.com
+sharepoint.com
+notion.site
+wordpress.com
+wixsite.com
+weebly.com
+glitch.me
+render.com
+railway.app
+fly.dev
+supabase.co
+azurewebsites.net
+s3.amazonaws.com
+storage.googleapis.com
+blob.core.windows.net
+docs.google.com
+forms.google.com
+sites.google.com

@@ -1,0 +1,1 @@
+"""PhishGuard package entry point."""

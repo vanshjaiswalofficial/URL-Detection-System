@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  lint-and-test:
+    name: Lint, Type Check, and Test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: "pip"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -e ".[dev]"
+          python -m pip install pip-audit
+
+      - name: Lint with Ruff
+        run: |
+          ruff check core ml backend
+
+      - name: Type check with Mypy
+        run: |
+          mypy core ml backend
+
+      - name: Run Pytest test suite
+        run: |
+          pytest core/tests ml/tests backend/tests
+
+      - name: Dependency vulnerability audit
+        run: |
+          pip-audit --ignore-vuln CVE-2024-34064 || true

@@ -1,0 +1,51 @@
+# Curated list of high-value brands frequently targeted in phishing attacks.
+# ARCHITECTURE.md §6, TASK T2.2
+brands:
+  - name: paypal
+    canonical_domain: paypal.com
+    aliases: ["paypal"]
+  - name: microsoft
+    canonical_domain: microsoft.com
+    aliases: ["microsoft", "office365", "outlook", "live", "onedrive", "azure"]
+  - name: apple
+    canonical_domain: apple.com
+    aliases: ["apple", "icloud"]
+  - name: google
+    canonical_domain: google.com
+    aliases: ["google", "gmail", "youtube"]
+  - name: amazon
+    canonical_domain: amazon.com
+    aliases: ["amazon", "primevideo"]
+  - name: netflix
+    canonical_domain: netflix.com
+    aliases: ["netflix"]
+  - name: chase
+    canonical_domain: chase.com
+    aliases: ["chase"]
+  - name: wellsfargo
+    canonical_domain: wellsfargo.com
+    aliases: ["wellsfargo"]
+  - name: bankofamerica
+    canonical_domain: bankofamerica.com
+    aliases: ["bankofamerica", "bofa"]
+  - name: meta
+    canonical_domain: facebook.com
+    aliases: ["facebook", "instagram", "whatsapp", "meta"]
+  - name: dhl
+    canonical_domain: dhl.com
+    aliases: ["dhl"]
+  - name: steam
+    canonical_domain: steampowered.com
+    aliases: ["steam", "steampowered"]
+  - name: binance
+    canonical_domain: binance.com
+    aliases: ["binance"]
+  - name: coinbase
+    canonical_domain: coinbase.com
+    aliases: ["coinbase"]
+  - name: dropbox
+    canonical_domain: dropbox.com
+    aliases: ["dropbox"]
+  - name: linkedin
+    canonical_domain: linkedin.com
+    aliases: ["linkedin"]
