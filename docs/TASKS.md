@@ -15,10 +15,10 @@ Rules: `RULES.md` R-AG-2/3/8. Context: `MEMORY.md`.
 |---|---|
 | Current release target | v0.5 "Hardened Fast Path & Models" |
 | Current phase | Phase 3 (Deep Model & Ensemble) & Phase 4 (Persistence & Services) |
-| Now | T3.1, T3.2, T4.5 |
-| Next | T3.4, T3.5, T4.6, T4.7 |
+| Now | T3.1, T3.2, T4.6 |
+| Next | T3.4, T3.6, T4.7 |
 | Blockers | none |
-| Last updated | 2026-10-05 (T3.3, T4.3, T4.4 verified and completed) |
+| Last updated | 2026-10-05 (T3.5 and T4.5 verified and completed) |
 
 **Suggested pacing (solo, part-time):** Phases 0–2 ≈ 2 weeks → v0.1 · Phases 3–5 ≈ 3–4 weeks → v0.5 · Phases 6–7 ≈ 3 weeks → v1.0. Adjust after the first baseline.
 
@@ -106,7 +106,7 @@ Rules: `RULES.md` R-AG-2/3/8. Context: `MEMORY.md`.
 - [ ] **T3.4 Adversarial augmentation experiment** (M) · Dep: T3.3, T3.1
   Retrain with augmented training URLs; compare robustness vs clean performance.
   **AC:** result and trade-offs logged; keep only if no regression on promotion criteria.
-- [ ] **T3.5 Explanations and reason mapping** (M) · Dep: T2.6
+- [x] **T3.5 Explanations and reason mapping** (M) · Dep: T2.6
   LightGBM `pred_contrib` → top-k → `core/reasons.yaml` templates; unit tests per reason code.
   **AC:** every non-benign verdict has ≥ 1 reason; reasons never reference unavailable features; text matches `DESIGN.md` §8.
 - [ ] **T3.6 Export and registry** (M) · Dep: T3.2
@@ -131,8 +131,7 @@ Rules: `RULES.md` R-AG-2/3/8. Context: `MEMORY.md`.
 - [x] **T4.4 Lists layer (allow/deny) and multi-tenant hosts** (M) · Dep: T4.3
   Curated allowlist, `multitenant_hosts.txt`, user lists endpoints.
   **AC:** tests: `x.github.io`-style tenants never auto-allowed; feed/deny beats allowlist; user allow only affects that key.
-- [ ] **T4.5 Persistence and privacy defaults** (M) · Dep: T4.3
-
+- [x] **T4.5 Persistence and privacy defaults** (M) · Dep: T4.3
   SQLAlchemy + Alembic; `scans`, `feedback`, `lists`, `feed_entries`, `model_registry`; `store=false` default; query stripping; retention job.
   **AC:** DB inspection test shows no raw URL stored by default; retention deletes old rows.
 - [ ] **T4.6 Cache, auth, rate limiting** (M) · Dep: T4.3
@@ -229,6 +228,7 @@ Rules: `RULES.md` R-AG-2/3/8. Context: `MEMORY.md`.
 
 | Date | Agent/Human | Tasks touched | Outcome | Next |
 |---|---|---|---|---|
+| 2026-10-05 | Antigravity | T3.5, T4.5 | Implemented database persistence (SQLAlchemy 2.0 models for scans, feedback, lists, feeds, models), privacy defaults (store=false, query stripping), retention cleanup job, reason mapper coverage & fallback reasons, 60 tests passing | T3.1, T3.2, T4.6 |
 | 2026-10-05 | Antigravity | T3.3, T4.3, T4.4 | Implemented adversarial robustness suite (7 perturbation generators), feature parity test, p95 latency benchmark, feed/deny priority layer ordering, user lists endpoints with multi-tenant rejection, 50 tests passing | T3.1, T3.2, T4.5 |
 | 2026-10-05 | Antigravity | T0.1–T0.4, T1.1–T1.3, T1.6, T2.1–T2.2, T2.5–T2.7, T4.1–T4.2 | Fixed backend module imports, fixed type errors and linting across all 28 files, verified 44 tests green, created GitHub Actions CI workflow, generated OpenAPI docs, validated CLI scan | T3.3, T4.3, T4.4 |
 | 2026-10-04 | Claude (docs author) | — | Created AGENTS, PRD, ARCHITECTURE, RULES, DESIGN, TASKS, MEMORY | T0.1 |

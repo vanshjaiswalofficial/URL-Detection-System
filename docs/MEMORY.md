@@ -15,8 +15,8 @@ Sections: 1 Current state · 2 Decisions · 3 Research findings · 4 Data source
 | Champion model | `v0.1-baseline` (LightGBM on 34 lexical + brand features) |
 | Best honest metrics | ROC-AUC: 1.0 (seed fixture set), PR-AUC: 1.0, ECE: 0.0003, recall@FPR 0.1%: 1.0 |
 | Active branch | main |
-| Environment | Python 3.11 virtualenv with uv/pip dependencies, all 50 tests passing |
-| Next action | Phase 3 (Char-CNN M3 T3.1, Ensemble T3.2) and Phase 4 (Persistence T4.5, Cache/Auth T4.6) |
+| Environment | Python 3.11 virtualenv with uv/pip dependencies, all 60 tests passing |
+| Next action | Phase 3 (Char-CNN M3 T3.1, Ensemble T3.2) and Phase 4 (Cache/Auth T4.6, Feeds T4.8) |
 
 
 ## 2. Decisions (ADR log)
@@ -148,6 +148,21 @@ Mirror of PRD §12: URL-based focus; non-commercial; CPU dev; Python + TypeScrip
 
 ## 9. Handoff notes (template — copy per session)
 
+### Session 2026-10-05 (Antigravity - Part 3)
+Worked on: T3.5, T4.5
+Done:
+- Implemented database persistence layer (`backend/app/db/`) with SQLAlchemy 2.0 declarative models (`ScanRecord`, `FeedbackRecord`, `ListRecord`, `FeedEntryRecord`, `ModelRegistryRecord`).
+- Enforced strict privacy defaults (ARCH §10.3, R-PRIV-1): `store=false` default ensures zero raw URLs stored in DB by default (canonical SHA-256 hash and defanged form stored for telemetry); `store=true` strips query params and fragments before storage.
+- Added retention management (`backend/app/db/retention.py` and endpoint `POST /v1/admin/retention/cleanup`) to prune records exceeding retention window (default 30 days).
+- Implemented reason mapping catalog expansion and fallback rule (`core/src/phishguard_core/reasons.py`, `core/src/phishguard_core/reasons.yaml`) ensuring every non-benign verdict has >= 1 reason with UI-segment mapping (T3.5, DESIGN.md §8).
+- Added comprehensive unit and integration test suites (`backend/tests/test_persistence.py`, `core/tests/test_reasons.py`).
+- Regenerated and validated OpenAPI 3.1 contract (`docs/openapi.json`).
+- Updated `.gitignore` to prevent tracking local SQLite `.db` / `.sqlite` files (RULES R-GIT-3).
+- Reached 60 total passing tests with 0 lint and 0 type errors across all 37 source files.
+Verified by: `ruff check .`, `mypy core ml backend`, `pytest -v` (60 passed in 10.71s).
+Decisions: Privacy-by-default architecture strictly respected.
+Next: T3.1 (Character-level CNN model M3 with ONNX export) and T4.6 (Cache, auth, rate limiting).
+
 ### Session 2026-10-05 (Antigravity - Part 2)
 Worked on: T3.3, T4.3, T4.4
 Done:
@@ -181,6 +196,7 @@ Next: T3.3 (Robustness suite) and T4.3/T4.4 (Lists layer and full scan path inte
 
 ## 10. Changelog
 
+- 2026-10-05 — Completed T3.5 (Explanations and reason mapping) and T4.5 (Persistence and privacy defaults). 60 tests passing, clean Ruff and Mypy across 37 source files.
 - 2026-10-05 — Completed T3.3 (Robustness suite), T4.3 (Fast path parity & latency), and T4.4 (Lists layer with multi-tenant rejection). 50 tests passing, clean Ruff/Mypy.
 - 2026-10-05 — Fully initialized test suite and static analysis (44 tests passing, 0 lint/type errors), generated CI workflow, OpenAPI schema, and data acquisition runner.
 - 2026-10-04 — Initial documentation pack created from problem statement and research (sections 3–4 populated from sources listed above).

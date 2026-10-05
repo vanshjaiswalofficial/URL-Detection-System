@@ -332,6 +332,15 @@ class LayeredDetector:
         risk_score = round(prob * 100)
         confidence = "high" if (prob >= 0.85 or prob <= 0.15) else "medium"
 
+        # Ensure every non-benign verdict has >= 1 reason (TASK T3.5, DESIGN.md §8)
+        if verdict in ("malicious", "suspicious") and not reasons:
+            reasons = [
+                self.reason_mapper.build_reason(
+                    "elevated_ml_risk",
+                    evidence={"risk_score": risk_score, "probability": round(prob, 4)},
+                )
+            ]
+
         duration_ms = max(int((time.perf_counter() - t0) * 1000), 1)
 
         return ScanResult(

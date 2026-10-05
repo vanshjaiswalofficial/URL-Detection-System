@@ -19,6 +19,9 @@ build/
 data/raw/
 data/interim/
 data/processed/
+*.db
+*.sqlite
+*.sqlite3
 models/*
 !models/.gitkeep
 

@@ -148,10 +148,52 @@
         }
       }
     },
+    "/v1/scan/{scan_id}": {
+      "get": {
+        "summary": "Get Scan By Id",
+        "description": "Retrieve scan result from database with privacy rules.",
+        "operationId": "get_scan_by_id_v1_scan__scan_id__get",
+        "parameters": [
+          {
+            "name": "scan_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Scan Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "additionalProperties": true,
+                  "title": "Response Get Scan By Id V1 Scan  Scan Id  Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/v1/lists": {
       "post": {
-        "summary": "Add List Entry",
-        "operationId": "add_list_entry_v1_lists_post",
+        "summary": "Add List Entry Endpoint",
+        "operationId": "add_list_entry_endpoint_v1_lists_post",
         "requestBody": {
           "required": true,
           "content": {
@@ -170,7 +212,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Add List Entry V1 Lists Post"
+                  "title": "Response Add List Entry Endpoint V1 Lists Post"
                 }
               }
             }
@@ -188,8 +230,8 @@
         }
       },
       "get": {
-        "summary": "Get User Lists",
-        "operationId": "get_user_lists_v1_lists_get",
+        "summary": "Get User Lists Endpoint",
+        "operationId": "get_user_lists_endpoint_v1_lists_get",
         "parameters": [
           {
             "name": "user_key",
@@ -209,7 +251,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Get User Lists V1 Lists Get"
+                  "title": "Response Get User Lists Endpoint V1 Lists Get"
                 }
               }
             }
@@ -227,8 +269,8 @@
         }
       },
       "delete": {
-        "summary": "Delete List Entry",
-        "operationId": "delete_list_entry_v1_lists_delete",
+        "summary": "Delete List Entry Endpoint",
+        "operationId": "delete_list_entry_endpoint_v1_lists_delete",
         "parameters": [
           {
             "name": "user_key",
@@ -266,7 +308,7 @@
                 "schema": {
                   "type": "object",
                   "additionalProperties": true,
-                  "title": "Response Delete List Entry V1 Lists Delete"
+                  "title": "Response Delete List Entry Endpoint V1 Lists Delete"
                 }
               }
             }
@@ -323,6 +365,54 @@
           }
         }
       }
+    },
+    "/v1/admin/retention/cleanup": {
+      "post": {
+        "summary": "Trigger Retention Cleanup",
+        "description": "Execute retention policy cleanup deleting scans older than retention_days (ARCH \u00a710.3).",
+        "operationId": "trigger_retention_cleanup_v1_admin_retention_cleanup_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/RetentionCleanupRequest"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Req"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": true,
+                  "type": "object",
+                  "title": "Response Trigger Retention Cleanup V1 Admin Retention Cleanup Post"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -347,6 +437,11 @@
             "type": "string",
             "title": "Client",
             "default": "api"
+          },
+          "store": {
+            "type": "boolean",
+            "title": "Store",
+            "default": false
           },
           "user_key": {
             "anyOf": [
@@ -413,6 +508,20 @@
         },
         "type": "object",
         "title": "HTTPValidationError"
+      },
+      "RetentionCleanupRequest": {
+        "properties": {
+          "retention_days": {
+            "type": "integer",
+            "maximum": 365.0,
+            "minimum": 1.0,
+            "title": "Retention Days",
+            "description": "Days to retain scan history",
+            "default": 30
+          }
+        },
+        "type": "object",
+        "title": "RetentionCleanupRequest"
       },
       "ScanRequest": {
         "properties": {

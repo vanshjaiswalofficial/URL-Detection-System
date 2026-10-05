@@ -94,6 +94,16 @@ DEFAULT_REASONS: dict[str, dict[str, str]] = {
         "text": "This address matches a domain in your personal blocklist.",
         "target_segment": "registered_domain",
     },
+    "new_domain": {
+        "severity": "medium",
+        "text": "The domain was registered very recently.",
+        "target_segment": "registered_domain",
+    },
+    "elevated_ml_risk": {
+        "severity": "medium",
+        "text": "Statistical patterns in the address match characteristics of known phishing sites.",
+        "target_segment": "host",
+    },
 }
 
 
