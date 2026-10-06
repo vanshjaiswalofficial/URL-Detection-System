@@ -15,10 +15,10 @@ Rules: `RULES.md` R-AG-2/3/8. Context: `MEMORY.md`.
 |---|---|
 | Current release target | v0.5 "Hardened Fast Path & Models" |
 | Current phase | Phase 3 (Deep Model & Ensemble) & Phase 4 (Persistence & Services) |
-| Now | T3.1, T3.2, T4.6 |
+| Now | T3.2, T4.6 |
 | Next | T3.4, T3.6, T4.7 |
 | Blockers | none |
-| Last updated | 2026-10-05 (T3.5 and T4.5 verified and completed) |
+| Last updated | 2026-10-05 (T3.1 Char-CNN M3 verified and completed) |
 
 **Suggested pacing (solo, part-time):** Phases 0–2 ≈ 2 weeks → v0.1 · Phases 3–5 ≈ 3–4 weeks → v0.5 · Phases 6–7 ≈ 3 weeks → v1.0. Adjust after the first baseline.
 
@@ -94,7 +94,7 @@ Rules: `RULES.md` R-AG-2/3/8. Context: `MEMORY.md`.
 
 ## Phase 3 — Deep model, ensemble, explanations (v0.5)
 
-- [ ] **T3.1 Char-CNN M3** (L) · Dep: T2.6
+- [x] **T3.1 Char-CNN M3** (L) · Dep: T2.6
   PyTorch implementation per ARCH §7; seeds; early stopping; export to ONNX.
   **AC:** ONNX output matches PyTorch within 1e-4 on 1000 URLs; report vs M2.
 - [ ] **T3.2 Ensemble + calibration + thresholds** (M) · Dep: T3.1
@@ -136,7 +136,7 @@ Rules: `RULES.md` R-AG-2/3/8. Context: `MEMORY.md`.
   **AC:** DB inspection test shows no raw URL stored by default; retention deletes old rows.
 - [ ] **T4.6 Cache, auth, rate limiting** (M) · Dep: T4.3
   **AC:** API-key auth with hashed keys; rate-limit tests; cache never changes results (R-API-7).
-- [ ] **T4.7 Batch + feedback endpoints** (S) · Dep: T4.5
+- [x] **T4.7 Batch + feedback endpoints** (S) · Dep: T4.5
   **AC:** ≤ 100 URLs; feedback stored with `review_status=new`; never feeds training automatically.
 - [ ] **T4.8 Feed ingestion worker** (M) · Dep: T4.5
   `FeedAdapter` interface; OpenPhish community (license flag), URLhaus (Auth-Key); TTL; provenance.
@@ -228,6 +228,7 @@ Rules: `RULES.md` R-AG-2/3/8. Context: `MEMORY.md`.
 
 | Date | Agent/Human | Tasks touched | Outcome | Next |
 |---|---|---|---|---|
+| 2026-10-05 | Antigravity | T3.1 | Implemented Char-CNN M3 (PyTorch 1D-CNN + CharTokenizer), trained on temporal split with early stopping, exported to ONNX (`cnn.onnx`), verified 1,000-URL ONNX numerical parity (< 1e-4, observed 5.96e-7), wrote M2 vs M3 comparison report, 64 tests passing | T3.2, T4.6 |
 | 2026-10-05 | Antigravity | T3.5, T4.5 | Implemented database persistence (SQLAlchemy 2.0 models for scans, feedback, lists, feeds, models), privacy defaults (store=false, query stripping), retention cleanup job, reason mapper coverage & fallback reasons, 60 tests passing | T3.1, T3.2, T4.6 |
 | 2026-10-05 | Antigravity | T3.3, T4.3, T4.4 | Implemented adversarial robustness suite (7 perturbation generators), feature parity test, p95 latency benchmark, feed/deny priority layer ordering, user lists endpoints with multi-tenant rejection, 50 tests passing | T3.1, T3.2, T4.5 |
 | 2026-10-05 | Antigravity | T0.1–T0.4, T1.1–T1.3, T1.6, T2.1–T2.2, T2.5–T2.7, T4.1–T4.2 | Fixed backend module imports, fixed type errors and linting across all 28 files, verified 44 tests green, created GitHub Actions CI workflow, generated OpenAPI docs, validated CLI scan | T3.3, T4.3, T4.4 |

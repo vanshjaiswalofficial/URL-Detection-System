@@ -15,8 +15,8 @@ Sections: 1 Current state · 2 Decisions · 3 Research findings · 4 Data source
 | Champion model | `v0.1-baseline` (LightGBM on 34 lexical + brand features) |
 | Best honest metrics | ROC-AUC: 1.0 (seed fixture set), PR-AUC: 1.0, ECE: 0.0003, recall@FPR 0.1%: 1.0 |
 | Active branch | main |
-| Environment | Python 3.11 virtualenv with uv/pip dependencies, all 60 tests passing |
-| Next action | Phase 3 (Char-CNN M3 T3.1, Ensemble T3.2) and Phase 4 (Cache/Auth T4.6, Feeds T4.8) |
+| Environment | Python 3.11 virtualenv with uv/pip dependencies, all 64 tests passing |
+| Next action | Phase 3 (Ensemble M4 & Calibration T3.2) and Phase 4 (Cache/Auth T4.6) |
 
 
 ## 2. Decisions (ADR log)
@@ -128,6 +128,7 @@ Add one row per run (R-ML-8). Only real, reproducible results. Link to `reports/
 | Run ID | Date | Model | Data manifest hash | Split | Key metrics (test) | xtest | Sanity-set FPs | Notes / decision |
 |---|---|---|---|---|---|---|---|---|
 | `v0.1-baseline` | 2026-10-05 | LightGBM M2 (34 lexical + brand features) | `split_manifest.json` sha256 | Grouped temporal | ROC-AUC: 1.0, PR-AUC: 1.0, ECE: 0.0003, Recall@0.1%FPR: 1.0 | Pending live dump | 0 on top-domain seed | Baseline model verified and packaged in `models/v0.1-baseline/` |
+| `v0.5-cnn` | 2026-10-05 | Char-CNN M3 (1D-CNN on raw characters) | `split_manifest.json` sha256 | Grouped temporal | ROC-AUC: 1.0, PR-AUC: 1.0, ECE: 0.3126, Recall@0.1%FPR: 1.0 | Pending live dump | 0 on top-domain seed | ONNX parity verified (< 1e-4, observed 5.96e-7) on 1,000 URLs. Packaged in `models/v0.5-cnn/` |
 | `robustness-v0.1-eval` | 2026-10-05 | `LayeredDetector` (L0-L3) | Fixture set (5 targets) | Perturbation suite | Clean Recall: 1.0, Perturbed Recall: 0.9714, Overall Drop: 0.0286 | — | 0 | Evaluated across 7 perturbation strategies (homoglyphs, stuffing, brand-in-path, extensions, encoding, compound splits, benign padding) |
 
 Metric columns to record at minimum: PR-AUC, ROC-AUC, recall@FPR 1%/0.1%/0.01%, ECE, precision@base-rate 0.05/0.5/5%, p95 latency.
@@ -147,6 +148,19 @@ Metric columns to record at minimum: PR-AUC, ROC-AUC, recall@FPR 1%/0.1%/0.01%, 
 Mirror of PRD §12: URL-based focus; non-commercial; CPU dev; Python + TypeScript; English-first with externalized strings; solo/small team.
 
 ## 9. Handoff notes (template — copy per session)
+
+### Session 2026-10-05 (Antigravity - Part 4)
+Worked on: T3.1
+Done:
+- Implemented Character-level CNN M3 model (`ml/src/phishguard_ml/models/char_cnn.py`) per ARCH §7 with character embedding (128 vocab, 32 dim), parallel Conv1D branches (k=3, 5, 7; 128 filters each, ReLU), global max-pooling, and dense classification layers with dropout.
+- Implemented `CharTokenizer` with sequence padding/truncation and ASCII character token mapping.
+- Added training pipeline with early stopping on validation PR-AUC (`ml/src/phishguard_ml/training/train_char_cnn.py`).
+- Exported PyTorch model to ONNX (`models/v0.5-cnn/cnn.onnx`) and verified numerical parity on 1,000 URLs (observed max absolute diff = 5.96e-7 <= 1e-4 AC).
+- Added comprehensive unit tests in `ml/tests/test_char_cnn.py` and comparative evaluation report in `docs/reports/m2_vs_m3_comparison.md`.
+- All 64 tests passing, 0 lint and 0 type errors across 41 source files.
+Verified by: `ruff check .`, `mypy core ml backend`, `pytest -v` (64 passed in 15.09s).
+Decisions: Dynamic batch size for ONNX Char-CNN; tokenized length standardized to 200 characters.
+Next: T3.2 (Ensemble M4 + isotonic calibration + thresholds) and T4.6 (Cache, auth, rate limiting).
 
 ### Session 2026-10-05 (Antigravity - Part 3)
 Worked on: T3.5, T4.5
@@ -196,6 +210,7 @@ Next: T3.3 (Robustness suite) and T4.3/T4.4 (Lists layer and full scan path inte
 
 ## 10. Changelog
 
+- 2026-10-05 — Completed T3.1 (Character-level CNN model M3 with ONNX export). 64 tests passing, ONNX parity verified (< 1e-4) across 1,000 URLs, clean Ruff and Mypy across 41 source files.
 - 2026-10-05 — Completed T3.5 (Explanations and reason mapping) and T4.5 (Persistence and privacy defaults). 60 tests passing, clean Ruff and Mypy across 37 source files.
 - 2026-10-05 — Completed T3.3 (Robustness suite), T4.3 (Fast path parity & latency), and T4.4 (Lists layer with multi-tenant rejection). 50 tests passing, clean Ruff/Mypy.
 - 2026-10-05 — Fully initialized test suite and static analysis (44 tests passing, 0 lint/type errors), generated CI workflow, OpenAPI schema, and data acquisition runner.

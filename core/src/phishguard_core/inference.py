@@ -21,6 +21,7 @@ from typing import Any
 import lightgbm as lgb
 import numpy as np
 
+from phishguard_core.calibration import IsotonicCalibrator
 from phishguard_core.features import (
     FEATURE_NAMES,
     MULTITENANT_HOSTS,
@@ -82,6 +83,7 @@ class LayeredDetector:
         self.reason_mapper = get_reason_mapper()
 
         self.booster: lgb.Booster | None = None
+        self.calibrator: IsotonicCalibrator | None = None
         self.feature_names: list[str] = FEATURE_NAMES
         self.t_suspicious: float = 0.35
         self.t_malicious: float = 0.70
@@ -129,6 +131,11 @@ class LayeredDetector:
         model_file = model_path / "model.txt"
         if model_file.exists():
             self.booster = lgb.Booster(model_file=str(model_file))
+
+        # Load Isotonic Calibrator (D-009)
+        calib_file = model_path / "calibrator.json"
+        if calib_file.exists():
+            self.calibrator = IsotonicCalibrator.load(calib_file)
 
     def scan(
         self,
